@@ -27,7 +27,6 @@ public class MyFirstVerticle extends AbstractVerticle {
             .listen(8080, result -> { //handler executed when server is actually started listening
                 if (result.succeeded())
                     startFuture.complete(); //inform Vert.x that this Verticle initialization completed successfully
-
                 else
                     startFuture.fail(result.cause());
             });

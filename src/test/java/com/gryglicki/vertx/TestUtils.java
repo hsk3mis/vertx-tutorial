@@ -9,12 +9,6 @@
  */
 package com.gryglicki.vertx;
 
-/**
- * TestUtils
- *
- * @author Michal Gryglicki (SG0955419)
- * @since Aug 08, 2017
- */
 public class TestUtils
 {
     public static void printlnWithThread(String message) {
