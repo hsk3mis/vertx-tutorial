@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+
+import static com.gryglicki.vertx.TestUtils.printlnWithThread;
 /**
  * VertxUnitRunner and TestContext - controls asynchronous aspect of the test
  * context.assertTrue(...) => assertions need to be run from context, because of synchronous nature.
@@ -60,9 +62,5 @@ public class MyFirstVerticleTest {
                async.complete();
             });
         });
-    }
-
-    private static void printlnWithThread(String message) {
-        System.out.println(message + " - " + Thread.currentThread());
     }
 }

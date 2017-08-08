@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+
+import static com.gryglicki.vertx.TestUtils.printlnWithThread;
 @RunWith(VertxUnitRunner.class)
 public class VerticleWith2HttpServersTest
 {
@@ -69,9 +71,5 @@ public class VerticleWith2HttpServersTest
                 async.complete();
             });
         });
-    }
-
-    private static void printlnWithThread(String message) {
-        System.out.println(message + " - " + Thread.currentThread());
     }
 }
