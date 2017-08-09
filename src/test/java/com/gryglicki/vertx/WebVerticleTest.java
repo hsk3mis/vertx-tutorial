@@ -34,7 +34,6 @@ public class WebVerticleTest
         vertx.createHttpClient().getNow(8080, "localhost", "/", response -> {
             response.handler(body -> {
                 context.assertTrue(body.toString().contains("Hello"));
-                printlnWithThread("Asynchronous: " + body.toString());
                async.complete();
             });
         });
@@ -46,10 +45,10 @@ public class WebVerticleTest
         final Async async = context.async();
 
         vertx.createHttpClient().getNow(8080, "localhost", "/assets/index.html", response -> {
-            response.handler(body -> {
-                //TODO: In this case handler is called multiple times (long answer) => how to assert on this kind of response ???
-                context.assertTrue(body.toString() != null);
-                printlnWithThread("Asynchronous: " + body.toString());
+            context.assertEquals(200, response.statusCode());
+            context.assertTrue(response.headers().get("content-type").contains("text/html"));
+            response.bodyHandler(body -> { //receive entire body as one piece
+                context.assertTrue(body.toString().contains("<title>My Whisky Collection</title>"));
                 async.complete();
             });
         });

@@ -83,12 +83,15 @@ public class WhiskyRESTVerticle extends AbstractVerticle {
 
     private void getWhisky(RoutingContext routingContext) {
         Optional<Integer> idOptional = idOrRespondWithBadRequest(routingContext);
-        idOptional.map(repository::get)
-            .ifPresent(whisky ->
-                routingContext.response()
-                    .setStatusCode(200)
-                    .putHeader("content-type", "application/json; charset=utf-8")
-                    .end(Json.encodePrettily(whisky)));
+        Optional<Whisky> whiskyOptional = idOptional.map(repository::get);
+        if (whiskyOptional.isPresent()) {
+            routingContext.response()
+                .setStatusCode(200)
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(whiskyOptional.get()));
+        } else {
+            routingContext.response().setStatusCode(404).end(); //404 = Not found
+        }
     }
 
     private void updateWhisky(RoutingContext routingContext) {

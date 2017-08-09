@@ -71,5 +71,17 @@ public class VerticleWith2HttpServersTest
                 async.complete();
             });
         });
+
+        /** Asynchronous client handling whole response as a single object */
+        final Async async2 = context.async(); //allows to notify test framework when we finish successfully or fail - controls test execution like context.asyncAssertSuccess()
+
+        //A lot of data can cause handler to be called multiple times with chunks of data !!!
+        vertx.createHttpClient().getNow(8081, "localhost", "/", response -> {
+            context.assertEquals(200, response.statusCode());
+            response.bodyHandler(body -> {
+                printlnWithThread("Asynchronous: " + body.toString());
+                async2.complete();
+            });
+        });
     }
 }

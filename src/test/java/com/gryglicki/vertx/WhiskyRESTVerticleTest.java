@@ -60,4 +60,31 @@ public class WhiskyRESTVerticleTest
         assertEquals(2, whiskiesList.whiskies.length);
         assertEquals("Bowmore 15 Years Laimrig", whiskiesList.whiskies[0].name);
     }
+
+    /** Sending POST request */
+    @Test
+    public void itIsPossibleToAddWhisky(TestContext context) {
+        final Async async = context.async();
+
+        final String json = Json.encodePrettily(new Whisky("Jameson", "Ireland"));
+        final String jsonLength = Integer.toString(json.length());
+
+        vertx.createHttpClient().post(8080, "localhost", "/api/whiskies")
+            .putHeader("content-type", "application/json")
+            .putHeader("content-length", jsonLength)
+            .handler(response -> { //setup response handler before sending request
+                context.assertEquals(201, response.statusCode());
+                context.assertTrue(response.headers().get("content-type").contains("application/json"));
+                response.bodyHandler(body -> {
+                    final Whisky whisky = Json.decodeValue(body.toString(), Whisky.class);
+                    context.assertNotNull(whisky.id);
+                    context.assertEquals(whisky.name, "Jameson");
+                    context.assertEquals(whisky.origin, "Ireland");
+                    async.complete();
+                });
+            })
+            .write(json) //write request
+            .end();
+
+    }
 }
